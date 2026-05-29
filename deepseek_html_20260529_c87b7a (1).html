@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Teachers Lesson Outline Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 550px;
+            margin: auto;
+            background: #f0f7f0;
+        }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2e7d32;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .description {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #1b5e20;
+            border-left: 4px solid #2e7d32;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 12px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #1b5e20;
+        }
+        .loader {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+            color: #2e7d32;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: gray;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📘 Teachers Lesson Outline Generator</h1>
+        
+        <div class="description">
+            <strong>✨ Why fill this form?</strong><br>
+            Save hours of lesson planning. Our AI generates complete Kenyan curriculum-aligned lesson outlines in seconds. 
+            Just enter your class, subject, and topic - get a professional lesson plan with objectives, resources, 
+            activities, differentiation, and assessment - ready for your TPAD and classroom use.
+        </div>
+        
+        <form id="lessonForm">
+            <label>Class (e.g., Grade 5, Form 2):</label>
+            <input type="text" id="class" placeholder="e.g., Grade 5, Form 2" required>
+            
+            <label>Subject:</label>
+            <input type="text" id="subject" placeholder="e.g., Mathematics, Science, English" required>
+            
+            <label>Topic / Strand:</label>
+            <input type="text" id="topic" placeholder="e.g., The Solar System, Fractions, Tenses" required>
+            
+            <label>Lesson Duration:</label>
+            <input type="text" id="duration" placeholder="e.g., 40 minutes, 35 minutes, 70 minutes" required>
+            
+            <label>Term:</label>
+            <select id="term" required>
+                <option value="">-- Select Term --</option>
+                <option>Term 1</option>
+                <option>Term 2</option>
+                <option>Term 3</option>
+            </select>
+            
+            <label>Week (1-13):</label>
+            <input type="number" id="week" min="1" max="13" placeholder="e.g., 4" required>
+            
+            <label>Teacher Name (optional):</label>
+            <input type="text" id="teacher" placeholder="Your name will appear on the outline">
+            
+            <button type="submit">🚀 Generate Lesson Outline</button>
+            <div class="loader" id="loader">⏳ Generating your lesson outline... please wait 10-15 seconds</div>
+        </form>
+        
+        <div class="footer">
+            AI-generated lesson outlines aligned with Kenyan CBC and 8-4-4 curriculum
+        </div>
+    </div>
+
+    <script>
+        const WEBHOOK_URL = "https://bwag.app.n8n.cloud/webhook/3c5e504a-efe6-4767-a996-6a80ebf22f0f";
+        
+        document.getElementById('lessonForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
+            
+            const data = {
+                class: document.getElementById('class').value,
+                subject: document.getElementById('subject').value,
+                topic: document.getElementById('topic').value,
+                duration: document.getElementById('duration').value,
+                term: document.getElementById('term').value,
+                week: document.getElementById('week').value,
+                teacherName: document.getElementById('teacher').value
+            };
+            
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const html = await response.text();
+                document.write(html);
+                document.close();
+            } catch (error) {
+                alert('Error: ' + error.message);
+                loader.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
